@@ -1,1 +1,36 @@
-
+<?xml version="1.0"?>
+<Container>
+  <Name>Docker Summary</Name>
+  <Repository>ngfblog/docker-summary</Repository>
+  <Registry>https://hub.docker.com/r/ngfblog/docker-summary</Registry>
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/ngfblog/Docker-summary</Support>
+  <Project>https://github.com/ngfblog/Docker-summary</Project>
+  <Overview>Generate an HTML summary of running Docker containers. Sortable, filterable, with dark theme.</Overview>
+  <Category>Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8090]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/icon.png</Icon>
+  <Environment>
+    <Variable>
+      <Name>TZ</Name>
+      <Value>Asia/Jerusalem</Value>
+      <Description>Timezone (e.g., Asia/Jerusalem)</Description>
+    </Variable>
+  </Environment>
+  <Data>
+    <Volume>
+      <HostDir>/var/run/docker.sock</HostDir>
+      <ContainerDir>/var/run/docker.sock</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Ports>
+    <Port>
+      <HostPort>8090</HostPort>
+      <ContainerPort>8090</ContainerPort>
+      <Protocol>tcp</Protocol>
+    </Port>
+  </Ports>
+</Container>
