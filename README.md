@@ -3,6 +3,8 @@
 A lightweight Docker container that displays a web-based summary of your running containers and networks.  
 Provides a dark-themed table, sorting, filtering, and easy refresh.
 
+Open in your browser: http://localhost:8090/view
+
 ## 🔧 Features
 
 - Real-time HTML summary of all running containers
