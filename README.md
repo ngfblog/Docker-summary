@@ -51,7 +51,7 @@ http://[YOUR_SERVER_IP]:8090/
 ## ⚙️ Manual Docker Run (CLI)
 
 ```bash
-docker run -d   --name docker-summary   -p 8090:8090   -v /var/run/docker.sock:/var/run/docker.sock   -e TZ=Asia/Jerusalem   ngfblog/docker-summary
+docker run -d   --name docker-summary   -p 8090:8090   -v /var/run/docker.sock:/var/run/docker.sock   -e TZ=Asia/XXX   ngfblog/docker-summary
 ```
 
 ---
