@@ -24,7 +24,7 @@ Perfect for monitoring, documentation, or simply keeping your environment clear.
 ## 🐳 Docker Hub
 
 **Image:**  
-[`ngfblog/docker-summary`](https://hub.docker.com/r/ngfblog/docker-summary)
+[`nirgf/docker-summary`](https://hub.docker.com/nirgf/docker-summary)
 
 ---
 
