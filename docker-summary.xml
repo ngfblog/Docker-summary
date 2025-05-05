@@ -18,5 +18,7 @@
   
   <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Docker socket access" Type="Path" Display="always" Required="true" Mask="false"/>
   
+  <Config Name="AppData Folder" Target="/app" Default="/mnt/user/appdata/docker-summary" Mode="rw" Description="Folder to store script and summary files" Type="Path" Display="always" Required="true" Mask="false"/>
+
   <Config Name="Timezone" Target="TZ" Default="Asia/Jerusalem" Description="Timezone" Type="Variable" Display="always" Required="true" Mask="false"/>
 </Container>
