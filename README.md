@@ -35,7 +35,7 @@ Perfect for monitoring, documentation, or simply keeping your environment clear.
 
 ### 2. Add the following URL:
 ```
-https://raw.githubusercontent.com/ngfblog/Docker-summary/main/templates/docker-summary.xml
+https://raw.githubusercontent.com/ngfblog/Docker-summary/main/docker-summary.xml
 ```
 
 ### 3. Save and go back to Docker tab  
