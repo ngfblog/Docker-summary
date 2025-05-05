@@ -1,36 +1,22 @@
 <?xml version="1.0"?>
 <Container>
   <Name>Docker Summary</Name>
-  <Repository>ngfblog/docker-summary</Repository>
-  <Registry>https://hub.docker.com/r/ngfblog/docker-summary</Registry>
+  <Repository>nirgf/docker-summary:latest</Repository>
+  <Registry>https://hub.docker.com/r/nirgf/docker-summary</Registry>
   <Network>bridge</Network>
-  <Shell>bash</Shell>
+  <MyIP/>
+  <Shell>sh</Shell>
   <Privileged>false</Privileged>
   <Support>https://github.com/ngfblog/Docker-summary</Support>
   <Project>https://github.com/ngfblog/Docker-summary</Project>
-  <Overview>Generate an HTML summary of running Docker containers. Sortable, filterable, with dark theme.</Overview>
-  <Category>Tools:</Category>
-  <WebUI>http://[IP]:[PORT:8090]/</WebUI>
-  <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/icon.png</Icon>
-  <Environment>
-    <Variable>
-      <Name>TZ</Name>
-      <Value>Asia/Jerusalem</Value>
-      <Description>Timezone (e.g., Asia/Jerusalem)</Description>
-    </Variable>
-  </Environment>
-  <Data>
-    <Volume>
-      <HostDir>/var/run/docker.sock</HostDir>
-      <ContainerDir>/var/run/docker.sock</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-  </Data>
-  <Ports>
-    <Port>
-      <HostPort>8090</HostPort>
-      <ContainerPort>8090</ContainerPort>
-      <Protocol>tcp</Protocol>
-    </Port>
-  </Ports>
+  <Overview>Generate a styled summary of Docker containers in HTML format, including live refresh, sort, and filter options.</Overview>
+  <Category>Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:8090]</WebUI>
+  <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/templates/icon.png</Icon>
+
+  <Config Name="Port" Target="8090" Default="8090" Mode="tcp" Description="Web interface port" Type="Port" Display="always" Required="true" Mask="false"/>
+  
+  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Docker socket access" Type="Path" Display="always" Required="true" Mask="false"/>
+  
+  <Config Name="Timezone" Target="TZ" Default="Asia/Jerusalem" Description="Timezone" Type="Variable" Display="always" Required="true" Mask="false"/>
 </Container>
