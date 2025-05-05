@@ -22,6 +22,8 @@ echo "<html><head><title>Docker Summary</title>
     --success: #4caf50;
     --warning: #ff9800;
     --danger: #f44336;
+    --tcp-color: #4a9bef;
+    --udp-color: #ef9a4a;
   }
 
   body { 
@@ -112,12 +114,7 @@ echo "<html><head><title>Docker Summary</title>
     background-color: var(--primary-light);
   }
   
-  th:after {
-    content: '⇵';
-    position: absolute;
-    right: 8px;
-    opacity: 0.5;
-  }
+  /* Removed the th:after pseudo-element that was adding the sort indicator */
   
   tr:nth-child(even) { 
     background-color: var(--bg-medium); 
@@ -188,6 +185,25 @@ echo "<html><head><title>Docker Summary</title>
     font-size: 0.85em;
     margin-right: 5px;
     margin-bottom: 5px;
+  }
+  
+  /* Port badges */
+  .port-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    color: var(--text-highlight);
+  }
+  
+  .port-tcp {
+    background-color: var(--tcp-color);
+  }
+  
+  .port-udp {
+    background-color: var(--udp-color);
   }
 </style>
 <script>
@@ -301,9 +317,56 @@ function formatNetworks() {
   }
 }
 
+function formatPorts() {
+  const table = document.getElementById('dockerTable');
+  
+  for (let i = 1; i < table.rows.length; i++) {
+    const portsCell = table.rows[i].cells[4];
+    const portsText = portsCell.textContent.trim();
+    
+    if (portsText !== '') {
+      const portMappings = portsText.split(', ');
+      let badgeHtml = '';
+      
+      portMappings.forEach(mapping => {
+        // Check if this is a TCP or UDP port
+        const isTCP = mapping.toLowerCase().includes('/tcp');
+        const isUDP = mapping.toLowerCase().includes('/udp');
+        
+        // Format: <IP>:<hostPort>-><containerPort>/<protocol>
+        let portClass = 'port-tcp';
+        let protocol = 'TCP';
+        
+        if (isUDP) {
+          portClass = 'port-udp';
+          protocol = 'UDP';
+        }
+        
+        // Extract the actual port numbers for better display
+        let portDisplay = mapping;
+        const portMatch = mapping.match(/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:)?([0-9]+)(->[0-9]+)?\/(tcp|udp)/i);
+        
+        if (portMatch) {
+          const hostPort = portMatch[2];
+          const containerPart = portMatch[3] ? portMatch[3].replace('->', ':') : '';
+          protocol = portMatch[4].toUpperCase();
+          portDisplay = hostPort + containerPart + ' ' + protocol;
+        }
+        
+        badgeHtml += '<span class=\"port-badge ' + portClass + '\">' + portDisplay + '</span>';
+      });
+      
+      if (badgeHtml) {
+        portsCell.innerHTML = badgeHtml;
+      }
+    }
+  }
+}
+
 window.onload = function() {
   colorizeStatus();
   formatNetworks();
+  formatPorts();
   document.getElementById('resultCount').textContent = 
     (document.getElementById('dockerTable').rows.length - 1) + ' containers';
 }
