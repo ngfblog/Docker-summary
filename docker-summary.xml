@@ -12,7 +12,7 @@
   <Overview>Generate a styled summary of Docker containers in HTML format, including live refresh, sort, and filter options.</Overview>
   <Category>Tools:Utilities</Category>
   <WebUI>http://[IP]:[PORT:8090]</WebUI>
-  <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/templates/icon.png</Icon>
+  <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/icon.png</Icon>
 
   <Config Name="Port" Target="8090" Default="8090" Mode="tcp" Description="Web interface port" Type="Port" Display="always" Required="true" Mask="false"/>
   
