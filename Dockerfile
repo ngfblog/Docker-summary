@@ -1,14 +1,17 @@
-FROM python:3.9-slim
-
-RUN apt-get update && apt-get install -y docker.io
+FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY run_server.py /app/
-COPY generate_summary.sh /app/
-COPY docker_summary.html /app/
+# Copy all files into the container
+COPY run_server.py .
+COPY generate_summary.sh .
+COPY docker_summary.html .
+COPY icon.png .
 
-RUN chmod +x /app/generate_summary.sh
+# Install necessary tools
+RUN apt-get update && \
+    apt-get install -y bash curl docker.io && \
+    chmod +x /app/generate_summary.sh
 
 EXPOSE 8090
 
