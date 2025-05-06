@@ -2,12 +2,13 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY run_server.py .
-COPY generate_summary.sh .
-COPY icon.png .
+COPY generate_summary.sh run_server.py icon.png ./
 
-RUN chmod +x generate_summary.sh
+RUN chmod +x /app/generate_summary.sh
+
+RUN apt-get update && apt-get install -y docker.io bash && \
+    pip install --no-cache-dir --upgrade pip
 
 EXPOSE 8090
 
-CMD ["python", "run_server.py"]
+CMD ["python", "/app/run_server.py"]
