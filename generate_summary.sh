@@ -114,7 +114,7 @@ echo "<html><head><title>Docker Summary</title>
     background-color: var(--primary-light);
   }
   
-  /* Removed the th:after pseudo-element that was adding the sort indicator */
+  /* Removed all th:after and related styles for sort indicators */
   
   tr:nth-child(even) { 
     background-color: var(--bg-medium); 
@@ -221,13 +221,8 @@ function sortTable(n) {
   rows.forEach(row => table.appendChild(row));
   table.setAttribute(\"data-sort-dir\", asc ? \"asc\" : \"desc\");
   
-  // Update header indicators
-  var headers = table.getElementsByTagName(\"th\");
-  for (var i = 0; i < headers.length; i++) {
-    headers[i].classList.remove(\"sorted-asc\", \"sorted-desc\");
-  }
-  
-  headers[n].classList.add(asc ? \"sorted-asc\" : \"sorted-desc\");
+  // Remove the code that updates header indicators
+  // Headers no longer get any visual sorting indicators
 }
 
 function regenerate() {
