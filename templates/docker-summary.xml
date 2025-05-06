@@ -4,20 +4,40 @@
   <Repository>nirgf/docker-summary:latest</Repository>
   <Registry>https://hub.docker.com/r/nirgf/docker-summary</Registry>
   <Network>bridge</Network>
-  <Shell>sh</Shell>
+  <MyIP/>
+  <Shell>bash</Shell>
   <Privileged>false</Privileged>
   <Support>https://github.com/ngfblog/Docker-summary</Support>
-  <Project>https://github.com/ngfblog/Docker-summary</Project>
-  <Overview>Generate a styled summary of Docker containers in HTML format, including live refresh, sort, and filter options.</Overview>
+  <Overview>This container runs a lightweight Python web server that generates a visual summary of your running Docker containers, including container ID, name, status, image, IP, network, and creation time. The summary is displayed in a sortable, filterable dark-themed HTML table.</Overview>
   <Category>Tools:Utilities</Category>
-  <WebUI>http://[IP]:[PORT:8090]/view</WebUI>
-  <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/icon.png</Icon>
 
-  <Config Name="Port" Target="8090" Default="8090" Mode="tcp" Description="Web interface port" Type="Port" Display="always" Required="true" Mask="false"/>
+  <Environment>
+    <Variable>
+      <Name>TZ</Name>
+      <Value>Asia/Jerusalem</Value>
+      <Description>Container Timezone</Description>
+    </Variable>
+  </Environment>
 
-  <Config Name="AppData" Target="/app" Default="/mnt/user/appdata/docker-summary" Mode="rw" Description="Container data path" Type="Path" Display="always" Required="true" Mask="false"/>
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/docker-summary</HostDir>
+      <ContainerDir>/app</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+    <Volume>
+      <HostDir>/var/run/docker.sock</HostDir>
+      <ContainerDir>/var/run/docker.sock</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
 
-  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Docker socket access" Type="Path" Display="always" Required="true" Mask="false"/>
+  <Ports>
+    <Port>
+      <HostPort>8090</HostPort>
+      <ContainerPort>8090</ContainerPort>
+      <Protocol>tcp</Protocol>
+    </Port>
+  </Ports>
 
-  <Config Name="Timezone" Target="TZ" Default="Asia/Jerusalem" Description="Timezone" Type="Variable" Display="always" Required="true" Mask="false"/>
 </Container>
