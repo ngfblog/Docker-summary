@@ -13,9 +13,15 @@
   <WebUI>http://[IP]:[PORT:8090]/view</WebUI>
   <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/icon.png</Icon>
 
+  <!-- Port -->
   <Config Name="Port" Target="8090" Default="8090" Mode="tcp" Description="Web interface port" Type="Port" Display="always" Required="true" Mask="false"/>
-  
-  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Docker socket access" Type="Path" Display="always" Required="true" Mask="false"/>
-  
+
+  <!-- Docker socket -->
+  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Docker socket access (required for container list)" Type="Path" Display="always" Required="true" Mask="false"/>
+
+  <!-- Mount for persistent app data -->
+  <Config Name="Appdata Path" Target="/app" Default="/mnt/user/appdata/docker-summary" Mode="rw" Description="Local appdata folder" Type="Path" Display="always" Required="true" Mask="false"/>
+
+  <!-- Timezone -->
   <Config Name="Timezone" Target="TZ" Default="Asia/Jerusalem" Description="Timezone" Type="Variable" Display="always" Required="true" Mask="false"/>
 </Container>
