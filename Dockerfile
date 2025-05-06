@@ -1,22 +1,34 @@
-FROM alpine:latest
+FROM debian:bullseye-slim
 
-# Install required packages: bash, curl, docker-cli, coreutils
-RUN apk add --no-cache bash curl docker-cli coreutils
+# Set timezone via build arg
+ARG TZ=Asia/Jerusalem
+ENV TZ=${TZ}
+
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    bash \
+    python3 \
+    python3-pip \
+    curl \
+    ca-certificates \
+    iproute2 \
+    net-tools \
+    tzdata \
+    docker.io \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy all project files into the container
+# Copy all files
 COPY . /app
 
-# Ensure generate_summary.sh is executable
+# Make the shell script executable
 RUN chmod +x /app/generate_summary.sh
-
-# Set environment variable for timezone (optional)
-ENV TZ=Asia/Jerusalem
 
 # Expose the port
 EXPOSE 8090
 
 # Run the Python server
-CMD ["python3", "/app/run_server.py"]
+CMD ["python3", "run_server.py"]
