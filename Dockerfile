@@ -1,14 +1,22 @@
-FROM python:3.10-slim
+FROM alpine:latest
 
+# Install required packages: bash, curl, docker-cli, coreutils
+RUN apk add --no-cache bash curl docker-cli coreutils
+
+# Set working directory
 WORKDIR /app
 
-COPY generate_summary.sh run_server.py icon.png ./
+# Copy all project files into the container
+COPY . /app
 
+# Ensure generate_summary.sh is executable
 RUN chmod +x /app/generate_summary.sh
 
-RUN apt-get update && apt-get install -y docker.io bash && \
-    pip install --no-cache-dir --upgrade pip
+# Set environment variable for timezone (optional)
+ENV TZ=Asia/Jerusalem
 
+# Expose the port
 EXPOSE 8090
 
-CMD ["python", "/app/run_server.py"]
+# Run the Python server
+CMD ["python3", "/app/run_server.py"]
