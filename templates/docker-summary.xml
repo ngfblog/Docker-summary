@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Container>
+  <Name>Docker Summary</Name>
+  <Repository>nirgf/docker-summary:latest</Repository>
+  <Registry>https://hub.docker.com/r/nirgf/docker-summary</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/ngfblog/Docker-summary</Support>
+  <Project>https://github.com/ngfblog/Docker-summary</Project>
+  <Overview>Generate a styled summary of Docker containers in HTML format, with refresh, sort, and filter features. Runs on port 8090.</Overview>
+  <Category>Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:8090]/view</WebUI>
+  <Icon>https://raw.githubusercontent.com/ngfblog/Docker-summary/main/icon.png</Icon>
+
+  <!-- Port configuration -->
+  <Config Name="Port" Target="8090" Default="8090" Mode="tcp" Description="Web interface port" Type="Port" Display="always" Required="true" Mask="false"/>
+
+  <!-- Bind mount Docker socket for docker inspection -->
+  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Docker socket access" Type="Path" Display="always" Required="true" Mask="false"/>
+
+  <!-- Timezone variable -->
+  <Config Name="Timezone" Target="TZ" Default="Asia/Jerusalem" Description="Timezone for correct report time" Type="Variable" Display="always" Required="true" Mask="false"/>
+</Container>
