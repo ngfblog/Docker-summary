@@ -6,47 +6,438 @@ CURRENT_TIME=$(date +"%Y-%m-%d %H:%M:%S")
 {
 echo "<html><head><title>Docker Summary</title>
 <style>
-  body { background-color: #121212; color: #f0f0f0; font-family: Arial, sans-serif; padding: 20px; }
-  h1 { color: #ffffff; }
-  button { background-color: #333; color: #fff; border: none; padding: 10px 20px; margin-bottom: 20px; cursor: pointer; }
-  button:hover { background-color: #555; }
-  table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-  th, td { border: 1px solid #444; padding: 8px; text-align: left; }
-  th { background-color: #222; cursor: pointer; }
-  tr:nth-child(even) { background-color: #1e1e1e; }
-  tr:hover { background-color: #333; }
+  :root {
+    --primary: #4a6baf;
+    --primary-light: #6987c9;
+    --primary-dark: #3a5593;
+    --accent: #61dafb;
+    --accent-light: #7de3ff;
+    --bg-dark: #121212;
+    --bg-medium: #1e1e1e;
+    --bg-light: #2d2d2d;
+    --text-light: #f0f0f0;
+    --text-highlight: #ffffff;
+    --text-muted: #b0b0b0;
+    --border: #444;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --tcp-color: #4a9bef;
+    --udp-color: #ef9a4a;
+  }
+
+  body { 
+    background-color: var(--bg-dark); 
+    color: var(--text-light); 
+    font-family: 'Segoe UI', Arial, sans-serif; 
+    padding: 20px;
+    margin: 0;
+    line-height: 1.6;
+  }
+  
+  h1 { 
+    color: var(--text-highlight); 
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .timestamp {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  
+  button { 
+    background-color: var(--primary); 
+    color: var(--text-highlight); 
+    border: none; 
+    padding: 10px 20px; 
+    margin-bottom: 10px; 
+    cursor: pointer; 
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  button:hover { 
+    background-color: var(--primary-light); 
+  }
+  
+  button:active {
+    background-color: var(--primary-dark);
+  }
+  
+  .reset-button {
+    background-color: var(--bg-light);
+  }
+  
+  .reset-button:hover {
+    background-color: var(--border);
+  }
+  
+  table { 
+    border-collapse: collapse; 
+    width: 100%; 
+    margin-top: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  th, td { 
+    border: 1px solid var(--border); 
+    padding: 12px; 
+    text-align: left; 
+  }
+  
+  th { 
+    background-color: var(--primary); 
+    color: var(--text-highlight);
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+  }
+  
+  th:hover {
+    background-color: var(--primary-light);
+  }
+  
+  /* Removed the th:after pseudo-element that was adding the sort indicator */
+  
+  tr:nth-child(even) { 
+    background-color: var(--bg-medium); 
+  }
+  
+  tr:hover { 
+    background-color: var(--bg-light); 
+  }
+  
+  .search-container { 
+    margin-bottom: 20px; 
+    display: flex; 
+    gap: 10px; 
+    align-items: center;
+    background-color: var(--bg-light);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  select, input { 
+    background-color: var(--bg-medium); 
+    color: var(--text-light); 
+    border: 1px solid var(--border); 
+    padding: 10px; 
+    border-radius: 4px;
+    flex: 1;
+  }
+  
+  select {
+    flex: 0 0 200px;
+  }
+  
+  select:focus, input:focus { 
+    outline: none; 
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(97, 218, 251, 0.2);
+  }
+  
+  .hidden { 
+    display: none; 
+  }
+  
+  /* Status color indicators */
+  .status-up {
+    color: var(--success);
+  }
+  
+  .status-exited {
+    color: var(--text-muted);
+  }
+  
+  .status-restarting {
+    color: var(--warning);
+  }
+  
+  .status-other {
+    color: var(--danger);
+  }
+  
+  /* Network badges */
+  .network-badge {
+    display: inline-block;
+    background-color: var(--primary-dark);
+    color: var(--text-highlight);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  
+  /* Port badges */
+  .port-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    color: var(--text-highlight);
+  }
+  
+  .port-tcp {
+    background-color: var(--tcp-color);
+  }
+  
+  .port-udp {
+    background-color: var(--udp-color);
+  }
 </style>
 <script>
 function sortTable(n) {
   var table = document.getElementById(\"dockerTable\");
   var rows = Array.from(table.rows).slice(1);
   var asc = table.getAttribute(\"data-sort-dir\") !== \"asc\";
+  
   rows.sort((a, b) => {
     var x = a.cells[n].innerText.toLowerCase();
     var y = b.cells[n].innerText.toLowerCase();
     return (x < y ? -1 : x > y ? 1 : 0) * (asc ? 1 : -1);
   });
+  
   rows.forEach(row => table.appendChild(row));
   table.setAttribute(\"data-sort-dir\", asc ? \"asc\" : \"desc\");
+  
+  // Update header indicators
+  var headers = table.getElementsByTagName(\"th\");
+  for (var i = 0; i < headers.length; i++) {
+    headers[i].classList.remove(\"sorted-asc\", \"sorted-desc\");
+  }
+  
+  headers[n].classList.add(asc ? \"sorted-asc\" : \"sorted-desc\");
 }
+
 function regenerate() {
-  fetch('/generate').then(() => location.reload());
+  document.getElementById('loading').style.display = 'flex';
+  fetch('/generate')
+    .then(() => {
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    })
+    .catch(error => {
+      console.error('Error generating report:', error);
+      document.getElementById('loading').style.display = 'none';
+      alert('Error generating report');
+    });
+}
+
+function searchTable() {
+  const searchColumn = document.getElementById('searchColumn').value;
+  const searchText = document.getElementById('searchText').value.toLowerCase();
+  const table = document.getElementById('dockerTable');
+  const columnIndex = parseInt(searchColumn);
+  let visibleCount = 0;
+  
+  for (let i = 1; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    const cell = row.cells[columnIndex];
+    const cellText = cell.textContent.toLowerCase();
+    
+    if (cellText.includes(searchText)) {
+      row.classList.remove('hidden');
+      visibleCount++;
+    } else {
+      row.classList.add('hidden');
+    }
+  }
+  
+  document.getElementById('resultCount').textContent = 
+    visibleCount + ' of ' + (table.rows.length - 1) + ' containers';
+}
+
+function resetSearch() {
+  document.getElementById('searchText').value = '';
+  const table = document.getElementById('dockerTable');
+  
+  for (let i = 1; i < table.rows.length; i++) {
+    table.rows[i].classList.remove('hidden');
+  }
+  
+  document.getElementById('resultCount').textContent = 
+    (table.rows.length - 1) + ' containers';
+}
+
+function colorizeStatus() {
+  const table = document.getElementById('dockerTable');
+  
+  for (let i = 1; i < table.rows.length; i++) {
+    const statusCell = table.rows[i].cells[3];
+    const statusText = statusCell.textContent.toLowerCase();
+    
+    if (statusText.includes('up')) {
+      statusCell.className = 'status-up';
+    } else if (statusText.includes('exited')) {
+      statusCell.className = 'status-exited';
+    } else if (statusText.includes('restart')) {
+      statusCell.className = 'status-restarting';
+    } else {
+      statusCell.className = 'status-other';
+    }
+  }
+}
+
+function formatNetworks() {
+  const table = document.getElementById('dockerTable');
+  
+  for (let i = 1; i < table.rows.length; i++) {
+    const networkCell = table.rows[i].cells[5];
+    const networks = networkCell.textContent.split(', ');
+    
+    if (networks[0] !== '') {
+      let badgeHtml = '';
+      networks.forEach(network => {
+        badgeHtml += '<span class=\"network-badge\">' + network + '</span>';
+      });
+      networkCell.innerHTML = badgeHtml;
+    }
+  }
+}
+
+function formatPorts() {
+  const table = document.getElementById('dockerTable');
+  
+  for (let i = 1; i < table.rows.length; i++) {
+    const portsCell = table.rows[i].cells[4];
+    const portsText = portsCell.textContent.trim();
+    
+    if (portsText !== '') {
+      const portMappings = portsText.split(', ');
+      let badgeHtml = '';
+      
+      portMappings.forEach(mapping => {
+        // Check if this is a TCP or UDP port
+        const isTCP = mapping.toLowerCase().includes('/tcp');
+        const isUDP = mapping.toLowerCase().includes('/udp');
+        
+        // Format: <IP>:<hostPort>-><containerPort>/<protocol>
+        let portClass = 'port-tcp';
+        let protocol = 'TCP';
+        
+        if (isUDP) {
+          portClass = 'port-udp';
+          protocol = 'UDP';
+        }
+        
+        // Extract the actual port numbers for better display
+        let portDisplay = mapping;
+        const portMatch = mapping.match(/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:)?([0-9]+)(->[0-9]+)?\/(tcp|udp)/i);
+        
+        if (portMatch) {
+          const hostPort = portMatch[2];
+          const containerPart = portMatch[3] ? portMatch[3].replace('->', ':') : '';
+          protocol = portMatch[4].toUpperCase();
+          portDisplay = hostPort + containerPart + ' ' + protocol;
+        }
+        
+        badgeHtml += '<span class=\"port-badge ' + portClass + '\">' + portDisplay + '</span>';
+      });
+      
+      if (badgeHtml) {
+        portsCell.innerHTML = badgeHtml;
+      }
+    }
+  }
+}
+
+window.onload = function() {
+  colorizeStatus();
+  formatNetworks();
+  formatPorts();
+  document.getElementById('resultCount').textContent = 
+    (document.getElementById('dockerTable').rows.length - 1) + ' containers';
 }
 </script>
-</head><body>
-<h1>Docker Summary</h1>
-<p>Generated at: $CURRENT_TIME</p>
-<button onclick=\"regenerate()\">Generate Summary</button>
-<table id=\"dockerTable\" data-sort-dir=\"asc\">
-<tr>
-  <th onclick=\"sortTable(0)\">Container ID</th>
-  <th onclick=\"sortTable(1)\">Name</th>
-  <th onclick=\"sortTable(2)\">Image</th>
-  <th onclick=\"sortTable(3)\">Status</th>
-  <th onclick=\"sortTable(4)\">Ports</th>
-</tr>"
-docker ps -a --format '<tr><td>{{.ID}}</td><td>{{.Names}}</td><td>{{.Image}}</td><td>{{.Status}}</td><td>{{.Ports}}</td></tr>'
-echo "</table></body></html>"
+</head>
+<body>
+<div class=\"container\">
+  <div class=\"header-container\">
+    <h1>Docker Summary</h1>
+    <span class=\"timestamp\">Generated at: $CURRENT_TIME</span>
+  </div>
+
+  <button onclick=\"regenerate()\">Generate Summary</button>
+  
+  <div class=\"search-container\">
+    <select id=\"searchColumn\" onchange=\"searchTable()\">
+      <option value=\"0\">Container ID</option>
+      <option value=\"1\">Name</option>
+      <option value=\"2\">Image</option>
+      <option value=\"3\">Status</option>
+      <option value=\"4\">Ports</option>
+      <option value=\"5\">Network</option>
+    </select>
+    <input type=\"text\" id=\"searchText\" placeholder=\"Search...\" oninput=\"searchTable()\">
+    <button class=\"reset-button\" onclick=\"resetSearch()\">Reset</button>
+    <span id=\"resultCount\"></span>
+  </div>
+
+  <table id=\"dockerTable\" data-sort-dir=\"asc\">
+    <tr>
+      <th onclick=\"sortTable(0)\">Container ID</th>
+      <th onclick=\"sortTable(1)\">Name</th>
+      <th onclick=\"sortTable(2)\">Image</th>
+      <th onclick=\"sortTable(3)\">Status</th>
+      <th onclick=\"sortTable(4)\">Ports</th>
+      <th onclick=\"sortTable(5)\">Network</th>
+    </tr>"
+
+# For each container, get its info and networks
+docker ps -a --format '{{.ID}}' | while read container_id; do
+  # Get basic container info
+  container_info=$(docker ps -a --filter "id=$container_id" --format '{{.ID}}|{{.Names}}|{{.Image}}|{{.Status}}|{{.Ports}}')
+  
+  # Get network info for this container
+  network_info=$(docker inspect --format '{{range $network, $conf := .NetworkSettings.Networks}}{{$network}}{{", "}}{{end}}' "$container_id" | sed 's/, $//')
+  
+  # Parse container info
+  IFS='|' read -r id name image status ports <<< "$container_info"
+  
+  # Output table row with all information
+  echo "<tr><td>$id</td><td>$name</td><td>$image</td><td>$status</td><td>$ports</td><td>$network_info</td></tr>"
+done
+
+echo "</table>
+
+<div id=\"loading\" style=\"display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 999;\">
+  <div style=\"color: white; background-color: var(--bg-light); padding: 20px; border-radius: 8px; text-align: center;\">
+    <div>Generating summary...</div>
+    <div style=\"margin-top: 10px; width: 40px; height: 40px; border: 4px solid var(--primary); border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 10px auto;\"></div>
+  </div>
+</div>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+</div>
+</body></html>"
 } > "$OUTPUT_FILE"
 
 echo "Docker summary generated!"
