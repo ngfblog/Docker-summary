@@ -5,6 +5,13 @@ import subprocess
 
 PORT = 8090
 
+# Function to generate the summary automatically on server start
+def auto_generate_summary():
+    subprocess.run(["/app/generate_summary.sh"])
+
+# Automatically generate the summary when the server starts
+auto_generate_summary()
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/generate':
