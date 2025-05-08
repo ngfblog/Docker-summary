@@ -2,13 +2,18 @@ version: "3.8"
 
 services:
   docker-summary:
-    image: nirgf/docker-summary:latest
     container_name: docker-summary
+    image: nirgf/docker-summary:latest
     ports:
       - "8090:8090"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./app:/app  # persist local
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - TZ=Asia/Jerusalem
     restart: unless-stopped
+    networks:
+      - bridge
+
+networks:
+  bridge:
+    driver: bridge
