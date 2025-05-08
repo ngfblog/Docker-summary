@@ -1,43 +1,22 @@
-<?xml version="1.0"?>
 <Container>
-  <Name>Docker Summary</Name>
-  <Repository>nirgf/docker-summary:latest</Repository>
-  <Registry>https://hub.docker.com/r/nirgf/docker-summary</Registry>
+  <Name>docker-summary</Name>
+  <Repository>docker-summary-server</Repository>
   <Network>bridge</Network>
-  <MyIP/>
   <Shell>bash</Shell>
-  <Privileged>false</Privileged>
-  <Support>https://github.com/ngfblog/Docker-summary</Support>
-  <Overview>This container runs a lightweight Python web server that generates a visual summary of your running Docker containers, including container ID, name, status, image, IP, network, and creation time. The summary is displayed in a sortable, filterable dark-themed HTML table.</Overview>
-  <Category>Tools:Utilities</Category>
-
+  <Privileged>true</Privileged>
   <Environment>
     <Variable>
       <Name>TZ</Name>
       <Value>Asia/Jerusalem</Value>
-      <Description>Container Timezone</Description>
     </Variable>
   </Environment>
-
-  <Data>
-    <Volume>
-      <HostDir>/mnt/user/appdata/docker-summary</HostDir>
-      <ContainerDir>/app</ContainerDir>
+  <Config>
+    <Data>
+      <Name>docker.sock</Name>
+      <Source>/var/run/docker.sock</Source>
+      <Target>/var/run/docker.sock</Target>
       <Mode>rw</Mode>
-    </Volume>
-    <Volume>
-      <HostDir>/var/run/docker.sock</HostDir>
-      <ContainerDir>/var/run/docker.sock</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-  </Data>
-
-  <Ports>
-    <Port>
-      <HostPort>8090</HostPort>
-      <ContainerPort>8090</ContainerPort>
-      <Protocol>tcp</Protocol>
-    </Port>
-  </Ports>
-
+    </Data>
+  </Config>
+  <WebUI>http://[IP]:[PORT:8090]/view</WebUI>
 </Container>
