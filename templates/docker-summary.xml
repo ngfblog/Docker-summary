@@ -4,7 +4,6 @@
   <Repository>nirgf/docker-summary:latest</Repository>
   <Registry>https://hub.docker.com/r/nirgf/docker-summary</Registry>
   <Network>bridge</Network>
-  <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
   <Support>https://github.com/ngfblog/Docker-summary</Support>
@@ -20,6 +19,6 @@
   <!-- Bind mount Docker socket for docker inspection -->
   <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Docker socket access" Type="Path" Display="always" Required="true" Mask="false"/>
 
-  <!-- Timezone variable -->
-  <Config Name="Timezone" Target="TZ" Default="Asia/Jerusalem" Description="Timezone for correct report time" Type="Variable" Display="always" Required="true" Mask="false"/>
+  <!-- Timezone variable with US default -->
+  <Config Name="Timezone" Target="TZ" Default="America/New_York" Description="Timezone for correct report time (e.g., America/New_York)" Type="Variable" Display="always" Required="true" Mask="false"/>
 </Container>
