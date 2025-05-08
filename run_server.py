@@ -1,16 +1,24 @@
-from flask import Flask, send_from_directory
+import http.server
+import socketserver
+import os
 import subprocess
 
-app = Flask(__name__)
+PORT = 8090
 
-@app.route('/generate')
-def generate_summary():
-    subprocess.call(["/bin/bash", "/app/generate_summary.sh"])
-    return "Summary generated."
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/generate':
+            subprocess.run(["/app/generate_summary.sh"])
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"Summary generated")
+        elif self.path == '/view':
+            self.path = '/docker_summary.html'
+            return http.server.SimpleHTTPRequestHandler.do_GET(self)
+        else:
+            self.send_error(404, "File not found")
 
-@app.route('/view')
-def view_summary():
-    return send_from_directory('/app', 'docker_summary.html')
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8090)
+os.chdir("/app")
+with socketserver.TCPServer(("", PORT), Handler) as httpd:
+    print(f"Serving at port {PORT}")
+    httpd.serve_forever()
