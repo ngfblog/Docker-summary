@@ -43,7 +43,7 @@ Click **"Add Container"** → Select **Docker Summary** → Click **Apply**.
 
 That’s it! Access the app at:
 ```
-http://[YOUR_SERVER_IP]:8090/
+http://[YOUR_SERVER_IP]:8090/view
 ```
 
 ---
